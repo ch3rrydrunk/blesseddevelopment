@@ -1,0 +1,5 @@
+.vscode/
+*.ipch
+env/
+.env
+bots_n_bolts/born2codebot_dir/__init.py__
