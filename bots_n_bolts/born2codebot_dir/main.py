@@ -29,8 +29,8 @@ REQUEST_KWARGS={
 #˜˜˜˜˜˜  STATES  ˜˜˜˜˜˜#
 MAIN, MORE, MISC, CONTACT = range(4)
 reply_keyboard = [['Узнать больше о нас'],
-				  ['FAQ', 'Всякое 0x1F47E'],
-                  ['Свяжись с нами! :space_invader:']]
+				  ['FAQ', 'Всякое ^__^'],
+                  ['Свяжись с нами!']]
 markup = ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True)
 
 #====== COMMANDS ======#
