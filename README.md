@@ -28,8 +28,8 @@ Remember, you are now pushing to the new branch, you just created.
 ```
 git fetch && git pull          // this will update the info on the master on your local machine 
 git checkout *your_branch_name*
-git pull https://github.com/ch3rrydrunk/BASED_BOIS_BASE.git // or set remote
-> *git will ask your Git Hub login and password here*
+git pull --set-upstream https://github.com/ch3rrydrunk/BASED_BOIS_BASE.git // after it
+> *git will ask your Git Hub login and password here*					   // u will be able to just push and pull
 echo KAEF
 ```
 

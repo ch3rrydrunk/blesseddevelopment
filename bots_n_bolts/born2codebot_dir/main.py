@@ -5,8 +5,10 @@ import logging as log
 import os
 
 from telegram import ReplyKeyboardMarkup
-from telegram.ext import (Updater, ConversationHandler, CommandHandler, RegexHandler,
-						 Filters, MessageHandler)
+from telegram.ext import (Updater, ConversationHandler, Filters)
+from telegram.ext import CommandHandler as CMH 
+from telegram.ext import RegexHandler as REH
+from telegram.ext import MessageHandler as MSH
 
 ####### SETTINGS #######
 #~~~~~~~ Logging ~~~~~~#
@@ -52,11 +54,12 @@ def help(bot, update):
 								reply_markup=markup)
 
 	return MAIN
-	
 
 
 def rewind(bot, update):
-	update.message.reply
+	return MAIN
+
+
 def error(update, context):
     """Log Errors caused by Updates."""
     logger.warning('Update "%s" caused error "%s"', update, context.error)
@@ -71,11 +74,11 @@ dp = updtr.dispatcher
 
 #State handling (aka Conversation)
 conv_handler = ConversationHandler(
-	entry_points=[CommandHandler('start', start),
-				  RegexHandler('^Назад$', rewind, pass_user_data=True)],
+	entry_points=[CMH('start', start),'''
+				  REH('^Назад$', rewind, pass_user_data=True)'''],
 
 	states={
-		MAIN:		[
+		MAIN:		[REH
 
 		],
 		MORE:		[
@@ -88,13 +91,13 @@ conv_handler = ConversationHandler(
 
 		]
 	},
-	fallbacks=[RegexHandler('^Назад$', rewind, pass_user_data=True)]
+	fallbacks=[REH('^Назад$', rewind, pass_user_data=True)]
 )
 #Commands
 dp.add_handler(conv_handler)
-dp.add_handler(CommandHandler("start", start))
-dp.add_handler(CommandHandler("help", help))
-dp.add_handler(RegexHandler('^Назад$', rewind, pass_user_data=True))
+dp.add_handler(CMH("start", start))
+dp.add_handler(CMH("help", help))
+dp.add_handler(REH('^Назад$', rewind, pass_user_data=True))
 
 #Navigation
 
@@ -103,8 +106,8 @@ dp.add_handler(RegexHandler('^Назад$', rewind, pass_user_data=True))
 
 
 #Junk
-dp.add_handler(RegexHandler("-h", help))
-dp.add_handler(MessageHandler(Filters.all, echo))
+dp.add_handler(REH("-h", help))
+dp.add_handler(MSH(Filters.all, echo))
 #Errors
 dp.add_error_handler(error)
 
