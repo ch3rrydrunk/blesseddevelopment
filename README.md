@@ -9,7 +9,7 @@ Just clone the rep and create subfolders according to your projects within exist
 
 The repository is loved and maintained with honor.
 
--=TO CLONE THE REP & BRANCH=-
+**-=TO CLONE THE REP & BRANCH=-**
 ```
 git clone https://github.com/ch3rrydrunk/blesseddevelopment *dir_name* && cd *dir_name*
 git branch *branch_name*       // name can be anything
@@ -17,14 +17,14 @@ git checkout *branch_name*	   // you can switch back
 echo KAEF					   // with git checkout master (git checkout --help for more)
 ```
 
--=TO UPDATE THE OTHERS CHANGES IN THE REP=-
+**-=TO UPDATE THE OTHERS CHANGES IN THE REP=-**
 ```
 git fetch && git pull https://github.com/ch3rrydrunk/blesseddevelopment && echo KAEF
 ```
 Simple as that! Then just continue working as usual with "add-commit-push" as needed.
 Remember, you are now pushing to the new branch, you just created.
 
--=TO SUBMIT YOUR BRANCH TO THE MASTER=-
+**-=TO SUBMIT YOUR BRANCH TO THE MASTER=-**
 ```
 git fetch && git pull          // this will update the info on the master on your local machine 
 git checkout *your_branch_name*
