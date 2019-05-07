@@ -2,6 +2,7 @@
 Where the good things happen.
 
 **-=WHAT WE DO HERE=-**
+
 This is a nice and clean way to collaborate on regular @justforlulz development all of us can be proud of.
 
 Just clone the rep and create subfolders according to your projects within existing structure.
