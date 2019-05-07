@@ -26,15 +26,6 @@ REQUEST_KWARGS={
     'password': 'PROXY_PASS',
 }'''
 
-######## LOGICS ########
-
-#˜˜˜˜˜˜  STATES  ˜˜˜˜˜˜#
-MAIN, MORE, MISC, CONTACT = range(4)
-reply_keyboard = [['Узнать больше о нас'],
-				  ['FAQ', 'Всякое ^__^'],
-                  ['Свяжись с нами!']]
-markup = ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True)
-
 #====== COMMANDS ======#
 def start(bot, update):
 	update.message.reply_text("Welcome stranger!",
@@ -67,21 +58,30 @@ def error(update, context):
 
 ####### IGNITION #######
 TOKEN = os.getenv("BOT_API_TOKEN")
-updtr = Updater(TOKEN)
+updtr = Updater(TOKEN, use_context=True)
 dp = updtr.dispatcher
 
-#˜˜˜˜˜˜ Handlers ˜˜˜˜˜˜#
+#======= LOGICS =======#
 
-#State handling (aka Conversation)
+#˜˜˜˜˜˜  KEYMAP  ˜˜˜˜˜˜#
+reply_keyboard = [['Узнать больше о нас'],
+				  ['FAQ', 'Всякое ^__^'],
+                  ['Свяжись с нами!']]
+markup = ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True)
+
+#˜˜˜˜˜˜  MANAGER ˜˜˜˜˜˜#
+MAIN, FAQ, MISC, CONTACT = range(4)
+
 conv_handler = ConversationHandler(
 	entry_points=[CMH('start', start),'''
 				  REH('^Назад$', rewind, pass_user_data=True)'''],
 
 	states={
-		MAIN:		[REH
+		MAIN:		[REH('^Узнать больше о Нас$', to_story),
+						REH('^FAQ$', to_faq),
 
 		],
-		MORE:		[
+		FAQ:		[
 
 		],
 		MISC:		[
@@ -93,7 +93,7 @@ conv_handler = ConversationHandler(
 	},
 	fallbacks=[REH('^Назад$', rewind, pass_user_data=True)]
 )
-#Commands
+
 dp.add_handler(conv_handler)
 dp.add_handler(CMH("start", start))
 dp.add_handler(CMH("help", help))
