@@ -44,7 +44,7 @@ def error(update, context):
 
 
 ####### IGNITION #######
-TOKEN = os.getenv("API_TOKEN")
+TOKEN = os.getenv("BOT_API_TOKEN")
 updtr = Updater(TOKEN)
 dp = updtr.dispatcher
 
