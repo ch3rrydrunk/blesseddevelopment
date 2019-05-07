@@ -1,8 +1,12 @@
 #!/usr/bin/env
-#By ch3rrydrunk <@ch3rrydrunk>
+# By ch3rrydrunk <@ch3rrydrunk>
+# Built with grace on python-telegram-bot
 import logging as log
 import os
-from telegram.ext import Updater, Filters, MessageHandler, CommandHandler, RegexHandler
+
+from telegram import ReplyKeyboardMarkup
+from telegram.ext import (Updater, ConversationHandler, CommandHandler, RegexHandler,
+						 Filters, MessageHandler)
 
 ####### SETTINGS #######
 #~~~~~~~ Logging ~~~~~~#
@@ -12,7 +16,7 @@ logger = log.getLogger(__name__)
 
 #~~~~~~~ Proxyfy ~~~~~~#
 '''
-# Be sure to add "request_kwargs=REQUEST_KWARGS" as Updater parameter
+# Be sure to add "request_kwargs=REQUEST_KWARGS" as Updater parameter if you wanna use proxy
 REQUEST_KWARGS={
     'proxy_url': 'http://PROXY_HOST:PROXY_PORT/',
     # Optional, if you need authentication:
@@ -22,22 +26,37 @@ REQUEST_KWARGS={
 
 ######## LOGICS ########
 
+#˜˜˜˜˜˜  STATES  ˜˜˜˜˜˜#
+MAIN, MORE, MISC, CONTACT = range(4)
+reply_keyboard = [['Узнать больше о нас'],
+				  ['FAQ', 'Всякое 0x1F47E'],
+                  ['Свяжись с нами! :space_invader:']]
+markup = ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True)
+
 #====== COMMANDS ======#
 def start(bot, update):
-	update.message.reply_text("Welcome stranger!")
-
+	update.message.reply_text("Welcome stranger!",
+								reply_markup=markup)
+	return MAIN
 
 def echo(bot, update):
 	update.message.reply_text(update.message.text)
 	update.message.reply_text("Серьезно? :)\n"
 							  "Попробуй что-нибудь еще!\n"
-							  "'-h' или '/help', например...")
-
+							  "или просто используй '/help'",
+								reply_markup=markup)
+	return MAIN
 
 def help(bot, update):
-	update.message.reply_text("Coming soon ˆ__ˆ")
+	update.message.reply_text("Выбери нужный отдел и вперед!",
+								reply_markup=markup)
+
+	return MAIN
+	
 
 
+def rewind(bot, update):
+	update.message.reply
 def error(update, context):
     """Log Errors caused by Updates."""
     logger.warning('Update "%s" caused error "%s"', update, context.error)
@@ -50,9 +69,33 @@ dp = updtr.dispatcher
 
 #˜˜˜˜˜˜ Handlers ˜˜˜˜˜˜#
 
+#State handling (aka Conversation)
+conv_handler = ConversationHandler(
+	entry_points=[CommandHandler('start', start),
+				  RegexHandler('^Назад$', rewind, pass_user_data=True)],
+
+	states={
+		MAIN:		[
+
+		],
+		MORE:		[
+
+		],
+		MISC:		[
+
+		],
+		CONTACT:	[
+
+		]
+	},
+	fallbacks=[RegexHandler('^Назад$', rewind, pass_user_data=True)]
+)
 #Commands
+dp.add_handler(conv_handler)
 dp.add_handler(CommandHandler("start", start))
 dp.add_handler(CommandHandler("help", help))
+dp.add_handler(RegexHandler('^Назад$', rewind, pass_user_data=True))
+
 #Navigation
 
 
