@@ -1,40 +1,70 @@
 #!/usr/bin/env
 #By ch3rrydrunk <@ch3rrydrunk>
-import logging, os
-import telegram as tlgrm
-import telegram.ext as tlg
+import logging as log
+import os
+from telegram.ext import Updater, Filters, MessageHandler, CommandHandler, RegexHandler
 
-####### LOGGING ########
+####### SETTINGS #######
+#~~~~~~~ Logging ~~~~~~#
+log.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+                    level=log.INFO)
+logger = log.getLogger(__name__)
 
-logging.basicConfig(for='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-					level=logging.INFO)
-logger = logging.getLogger(__name__)
+#~~~~~~~ Proxyfy ~~~~~~#
+'''
+# Be sure to add "request_kwargs=REQUEST_KWARGS" as Updater parameter
+REQUEST_KWARGS={
+    'proxy_url': 'http://PROXY_HOST:PROXY_PORT/',
+    # Optional, if you need authentication:
+    'username': 'PROXY_USER',
+    'password': 'PROXY_PASS',
+}'''
 
 ######## LOGICS ########
 
 #====== COMMANDS ======#
-def start(update, bot)
+def start(bot, update):
 	update.message.reply_text("Welcome stranger!")
 
-def echo(update, bot)
-	update.message.reply_text("\n".join("This :", update.message.text, "is useless",
-												"Resistance is futile!",
-												"\\help or \'Помощь\' for assistance")
 
-def help(update, bot)
+def echo(bot, update):
+	update.message.reply_text(update.message.text)
+	update.message.reply_text("Серьезно? :)\n"
+							  "Попробуй что-нибудь еще!\n"
+							  "'-h' или '/help', например...")
+
+
+def help(bot, update):
 	update.message.reply_text("Coming soon ˆ__ˆ")
 
+
+def error(update, context):
+    """Log Errors caused by Updates."""
+    logger.warning('Update "%s" caused error "%s"', update, context.error)
+
+
 ####### IGNITION #######
-TOKEN = os.get("API_TOKEN")
-updtr = tlg.Updater(TOKEN, use_context=True)
+TOKEN = os.getenv("API_TOKEN")
+updtr = Updater(TOKEN)
 dp = updtr.dispatcher
 
 #˜˜˜˜˜˜ Handlers ˜˜˜˜˜˜#
-dp.add_handler(tlg.CommandHandler("start", start))
-dp.add_handler(tlg.CommandHandler("help", start))
 
-dp.add_handler(tlg.MessageHandler((tlg.Filters.text & tlg.Filters.command), echo))
+#Commands
+dp.add_handler(CommandHandler("start", start))
+dp.add_handler(CommandHandler("help", help))
+#Navigation
 
+
+#Callback
+
+
+#Junk
+dp.add_handler(RegexHandler("-h", help))
+dp.add_handler(MessageHandler(Filters.all, echo))
+#Errors
+dp.add_error_handler(error)
+
+#˜˜˜˜˜˜ Gogogo ˜˜˜˜˜˜#
 updtr.start_polling()
 updtr.idle()
-
