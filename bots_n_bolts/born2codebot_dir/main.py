@@ -5,7 +5,7 @@ import logging as log
 import os
 
 from telegram import ReplyKeyboardMarkup, CallbackQuery
-from telegram.ext import (Updater, PicklePersistence, CallbackContext, ConversationHandler, Filters)
+from telegram.ext import (Updater, CallbackContext, ConversationHandler, Filters)
 from telegram.ext import CommandHandler as CMH 
 from telegram.ext import MessageHandler as MSH
 
@@ -71,13 +71,17 @@ def	to_contact(update, context):
 def	to_links(update, context):
 	text = update.message.text
 	if (text.find('📱', 0)):
-		update.message.reply_text("https://www.instagram.com/21coding/")
+		update.message.reply_text("https://www.instagram.com/21coding/",
+								reply_markup=markup)
 	elif (text.find('🙃', 0)):
-		update.message.reply_text("https://www.facebook.com/21coding")
+		update.message.reply_text("https://www.facebook.com/21coding",
+								reply_markup=markup)
 	elif (text.find('🅱️', 0)):
-		update.message.reply_text("https://vk.com/coding21")
+		update.message.reply_text("https://vk.com/coding21",
+								reply_markup=markup)
 	elif (text.find('🕸', 0)):
-		update.message.reply_text("https://21-school.ru/")
+		update.message.reply_text("https://21-school.ru/",
+								reply_markup=markup)
 	return MAIN
 
 def rewind(update, context):
@@ -136,16 +140,13 @@ conv_handler = ConversationHandler(
 
 		],
 	},
-	fallbacks=[MSH(Filters.regex('^Назад$'), rewind)],
-	persistent=True, name='my_name',
+	fallbacks=[MSH(Filters.all, help)],
 )
 
 bot.add_handler(conv_handler)
 #Commands
 bot.add_handler(CMH("start", start))
 bot.add_handler(CMH("help", help))
-#Junk
-bot.add_handler(MSH(Filters.all, help))
 #Errors
 bot.add_error_handler(error)
 
