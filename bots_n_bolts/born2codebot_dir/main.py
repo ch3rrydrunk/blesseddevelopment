@@ -4,10 +4,9 @@
 import logging as log
 import os
 
-from telegram import ReplyKeyboardMarkup
-from telegram.ext import (Updater, ConversationHandler, Filters)
+from telegram import ReplyKeyboardMarkup, CallbackQuery
+from telegram.ext import (Updater, PicklePersistence, CallbackContext, ConversationHandler, Filters)
 from telegram.ext import CommandHandler as CMH 
-from telegram.ext import RegexHandler as REH
 from telegram.ext import MessageHandler as MSH
 
 ####### SETTINGS #######
@@ -26,28 +25,62 @@ REQUEST_KWARGS={
     'password': 'PROXY_PASS',
 }'''
 
-#====== COMMANDS ======#
-def start(bot, update):
+######### LOGICS ########
+#~~~~~~~ Commands ~~~~~~#
+def start(update, context):
 	update.message.reply_text("Welcome stranger!",
 								reply_markup=markup)
 	return MAIN
 
-def echo(bot, update):
-	update.message.reply_text(update.message.text)
+
+def help(update, context):
 	update.message.reply_text("Серьезно? :)\n"
-							  "Попробуй что-нибудь еще!\n"
-							  "или просто используй '/help'",
+								"Просто используй кнопки для навигации по боту"
+								"или набери '/start' для перезагрузки!",
 								reply_markup=markup)
 	return MAIN
 
-def help(bot, update):
-	update.message.reply_text("Выбери нужный отдел и вперед!",
+#~~~~~~~~ States ~~~~~~~#
+def	to_story(update, context):
+	update.message.reply_text("Загляни чуть позже;)\n"
+								"Ведутся работы!",
 								reply_markup=markup)
+	return STORY
 
+
+def	to_faq(update, context):
+	update.message.reply_text("Загляни чуть позже;)\n"
+								"Ведутся работы!",
+								reply_markup=markup)
+	return FAQ
+
+
+def	to_misc(update, context):
+	update.message.reply_text("Загляни чуть позже;)\n"
+								"Ведутся работы!",
+								reply_markup=markup)
+	return MISC
+
+
+def	to_contact(update, context):
+	update.message.reply_text("Загляни чуть позже;)\n"
+								"Ведутся работы!",
+								reply_markup=markup)
+	return CONTACT
+	
+def	to_links(update, context):
+	text = update.message.text
+	if (text.find('📱', 0)):
+		update.message.reply_text("https://www.instagram.com/21coding/")
+	elif (text.find('🙃', 0)):
+		update.message.reply_text("https://www.facebook.com/21coding")
+	elif (text.find('🅱️', 0)):
+		update.message.reply_text("https://vk.com/coding21")
+	elif (text.find('🕸', 0)):
+		update.message.reply_text("https://21-school.ru/")
 	return MAIN
 
-
-def rewind(bot, update):
+def rewind(update, context):
 	return MAIN
 
 
@@ -58,59 +91,65 @@ def error(update, context):
 
 ####### IGNITION #######
 TOKEN = os.getenv("BOT_API_TOKEN")
-updtr = Updater(TOKEN, use_context=True)
-dp = updtr.dispatcher
+bot_persistence = PicklePersistence(filename='stamina.bot') ## This allows to store chat_ and user_ data states 
+bot_core = Updater(TOKEN, persistence=bot_persistence, use_context=True)
+bot = bot_core.dispatcher
 
 #======= LOGICS =======#
 
 #˜˜˜˜˜˜  KEYMAP  ˜˜˜˜˜˜#
-reply_keyboard = [['Узнать больше о нас'],
-				  ['FAQ', 'Всякое ^__^'],
-                  ['Свяжись с нами!']]
+reply_keyboard = [['🌈 Узнать больше о Школе 🌈'],
+				  ['🤷‍♂️ FAQ 🤷', '🔮 Всякое 🔮'],
+                  ['📲 Свяжись с нами! 📲'],
+				  ['📱📷', '🙃📖', '🅱️🙏', '🕸🔗']]
 markup = ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True)
 
 #˜˜˜˜˜˜  MANAGER ˜˜˜˜˜˜#
-MAIN, FAQ, MISC, CONTACT = range(4)
+MAIN, STORY, FAQ, MISC, CONTACT, LINKS = range(6)
 
 conv_handler = ConversationHandler(
-	entry_points=[CMH('start', start),'''
-				  REH('^Назад$', rewind, pass_user_data=True)'''],
+	entry_points=[CMH('start', start),
+					CMH('help', help),
+	],
 
 	states={
-		MAIN:		[REH('^Узнать больше о Нас$', to_story),
-						REH('^FAQ$', to_faq),
+		MAIN:	[MSH(Filters.regex('^🌈 Узнать больше о Школе 🌈$'), to_story),
+					MSH(Filters.regex('^🤷‍♂️ FAQ 🤷$'), to_faq),
+					MSH(Filters.regex('^🔮 Всякое 🔮$'), to_misc),
+					MSH(Filters.regex('^📲 Свяжись с нами! 📲$'), to_contact),
+					MSH((Filters.regex('^📱📷$') | Filters.regex('^🙃📖$') | 
+							Filters.regex('^🅱️🙏$') | Filters.regex('^🕸🔗$')), to_links),
+					
+		],
+		STORY:	[
 
 		],
-		FAQ:		[
+		FAQ:	[
 
 		],
-		MISC:		[
+		MISC:	[
 
 		],
-		CONTACT:	[
+		CONTACT:[
 
-		]
+		],
+		LINKS:[
+
+		],
 	},
-	fallbacks=[REH('^Назад$', rewind, pass_user_data=True)]
+	fallbacks=[MSH(Filters.regex('^Назад$'), rewind)],
+	persistent=True, name='my_name',
 )
 
-dp.add_handler(conv_handler)
-dp.add_handler(CMH("start", start))
-dp.add_handler(CMH("help", help))
-dp.add_handler(REH('^Назад$', rewind, pass_user_data=True))
-
-#Navigation
-
-
-#Callback
-
-
+bot.add_handler(conv_handler)
+#Commands
+bot.add_handler(CMH("start", start))
+bot.add_handler(CMH("help", help))
 #Junk
-dp.add_handler(REH("-h", help))
-dp.add_handler(MSH(Filters.all, echo))
+bot.add_handler(MSH(Filters.all, help))
 #Errors
-dp.add_error_handler(error)
+bot.add_error_handler(error)
 
 #˜˜˜˜˜˜ Gogogo ˜˜˜˜˜˜#
-updtr.start_polling()
-updtr.idle()
+bot_core.start_polling()
+bot_core.idle()
