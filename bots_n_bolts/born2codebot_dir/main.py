@@ -91,8 +91,7 @@ def error(update, context):
 
 ####### IGNITION #######
 TOKEN = os.getenv("BOT_API_TOKEN")
-bot_persistence = PicklePersistence(filename='stamina.bot') ## This allows to store chat_ and user_ data states 
-bot_core = Updater(TOKEN, persistence=bot_persistence, use_context=True)
+bot_core = Updater(TOKEN, use_context=True)
 bot = bot_core.dispatcher
 
 #======= LOGICS =======#
