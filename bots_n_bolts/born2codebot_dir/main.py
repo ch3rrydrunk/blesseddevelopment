@@ -35,7 +35,7 @@ def start(update, context):
 
 def help(update, context):
 	update.message.reply_text("Серьезно? :)\n"
-								"Просто используй кнопки для навигации по боту"
+								"Просто используй кнопки для навигации по боту\n"
 								"или набери '/start' для перезагрузки!",
 								reply_markup=markup)
 	return MAIN
@@ -108,7 +108,7 @@ reply_keyboard = [['🌈 Узнать больше о Школе 🌈'],
 markup = ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True)
 
 #˜˜˜˜˜˜  MANAGER ˜˜˜˜˜˜#
-MAIN, STORY, FAQ, MISC, CONTACT, LINKS = range(6)
+MAIN, STORY, FAQ, MISC, CONTACT = range(5)
 
 conv_handler = ConversationHandler(
 	entry_points=[CMH('start', start),
@@ -124,29 +124,44 @@ conv_handler = ConversationHandler(
 							Filters.regex('^🅱️🙏$') | Filters.regex('^🕸🔗$')), to_links),
 					
 		],
-		STORY:	[
-
+		STORY:	[MSH(Filters.regex('^🌈 Узнать больше о Школе 🌈$'), to_story),
+					MSH(Filters.regex('^🤷‍♂️ FAQ 🤷$'), to_faq),
+					MSH(Filters.regex('^🔮 Всякое 🔮$'), to_misc),
+					MSH(Filters.regex('^📲 Свяжись с нами! 📲$'), to_contact),
+					MSH((Filters.regex('^📱📷$') | Filters.regex('^🙃📖$') | 
+							Filters.regex('^🅱️🙏$') | Filters.regex('^🕸🔗$')), to_links),
+					
 		],
-		FAQ:	[
-
+		FAQ:	[MSH(Filters.regex('^🌈 Узнать больше о Школе 🌈$'), to_story),
+					MSH(Filters.regex('^🤷‍♂️ FAQ 🤷$'), to_faq),
+					MSH(Filters.regex('^🔮 Всякое 🔮$'), to_misc),
+					MSH(Filters.regex('^📲 Свяжись с нами! 📲$'), to_contact),
+					MSH((Filters.regex('^📱📷$') | Filters.regex('^🙃📖$') | 
+							Filters.regex('^🅱️🙏$') | Filters.regex('^🕸🔗$')), to_links),
+					
 		],
-		MISC:	[
-
+		MISC:	[MSH(Filters.regex('^🌈 Узнать больше о Школе 🌈$'), to_story),
+					MSH(Filters.regex('^🤷‍♂️ FAQ 🤷$'), to_faq),
+					MSH(Filters.regex('^🔮 Всякое 🔮$'), to_misc),
+					MSH(Filters.regex('^📲 Свяжись с нами! 📲$'), to_contact),
+					MSH((Filters.regex('^📱📷$') | Filters.regex('^🙃📖$') | 
+							Filters.regex('^🅱️🙏$') | Filters.regex('^🕸🔗$')), to_links),
+					
 		],
-		CONTACT:[
-
-		],
-		LINKS:[
-
+		CONTACT:[MSH(Filters.regex('^🌈 Узнать больше о Школе 🌈$'), to_story),
+					MSH(Filters.regex('^🤷‍♂️ FAQ 🤷$'), to_faq),
+					MSH(Filters.regex('^🔮 Всякое 🔮$'), to_misc),
+					MSH(Filters.regex('^📲 Свяжись с нами! 📲$'), to_contact),
+					MSH((Filters.regex('^📱📷$') | Filters.regex('^🙃📖$') | 
+							Filters.regex('^🅱️🙏$') | Filters.regex('^🕸🔗$')), to_links),
+					
 		],
 	},
 	fallbacks=[MSH(Filters.all, help)],
 )
 
 bot.add_handler(conv_handler)
-#Commands
-bot.add_handler(CMH("start", start))
-bot.add_handler(CMH("help", help))
+
 #Errors
 bot.add_error_handler(error)
 
