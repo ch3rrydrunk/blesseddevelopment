@@ -69,20 +69,17 @@ def	to_contact(update, context):
 	return CONTACT
 	
 def	to_links(update, context):
-	text = update.message.text
-	if (text.find('📱', 0)):
-		update.message.reply_text("https://www.instagram.com/21coding/",
+	
+	update.message.reply_text("https://www.instagram.com/21coding/",
 								reply_markup=markup)
-	elif (text.find('🙃', 0)):
-		update.message.reply_text("https://www.facebook.com/21coding",
+	update.message.reply_text("https://www.facebook.com/21coding",
 								reply_markup=markup)
-	elif (text.find('🅱️', 0)):
-		update.message.reply_text("https://vk.com/coding21",
+	update.message.reply_text("https://vk.com/coding21",
 								reply_markup=markup)
-	elif (text.find('🕸', 0)):
-		update.message.reply_text("https://21-school.ru/",
+	update.message.reply_text("https://21-school.ru/",
 								reply_markup=markup)
 	return MAIN
+
 
 def rewind(update, context):
 	return MAIN
@@ -104,7 +101,7 @@ bot = bot_core.dispatcher
 reply_keyboard = [['🌈 Узнать больше о Школе 🌈'],
 				  ['🤷‍♂️ FAQ 🤷', '🔮 Всякое 🔮'],
                   ['📲 Свяжись с нами! 📲'],
-				  ['📱📷', '🙃📖', '🅱️🙏', '🕸🔗']]
+				  ['^🕸🔗📱$']]
 markup = ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True)
 
 #˜˜˜˜˜˜  MANAGER ˜˜˜˜˜˜#
@@ -112,7 +109,7 @@ MAIN, STORY, FAQ, MISC, CONTACT = range(5)
 
 conv_handler = ConversationHandler(
 	entry_points=[CMH('start', start),
-					CMH('help', help),
+					MSH(Filters.all, rewind),
 	],
 
 	states={
@@ -120,40 +117,19 @@ conv_handler = ConversationHandler(
 					MSH(Filters.regex('^🤷‍♂️ FAQ 🤷$'), to_faq),
 					MSH(Filters.regex('^🔮 Всякое 🔮$'), to_misc),
 					MSH(Filters.regex('^📲 Свяжись с нами! 📲$'), to_contact),
-					MSH((Filters.regex('^📱📷$') | Filters.regex('^🙃📖$') | 
-							Filters.regex('^🅱️🙏$') | Filters.regex('^🕸🔗$')), to_links),
+					MSH(Filters.regex('^🕸🔗📱$'), to_links),
 					
 		],
-		STORY:	[MSH(Filters.regex('^🌈 Узнать больше о Школе 🌈$'), to_story),
-					MSH(Filters.regex('^🤷‍♂️ FAQ 🤷$'), to_faq),
-					MSH(Filters.regex('^🔮 Всякое 🔮$'), to_misc),
-					MSH(Filters.regex('^📲 Свяжись с нами! 📲$'), to_contact),
-					MSH((Filters.regex('^📱📷$') | Filters.regex('^🙃📖$') | 
-							Filters.regex('^🅱️🙏$') | Filters.regex('^🕸🔗$')), to_links),
+		STORY:	[
 					
 		],
-		FAQ:	[MSH(Filters.regex('^🌈 Узнать больше о Школе 🌈$'), to_story),
-					MSH(Filters.regex('^🤷‍♂️ FAQ 🤷$'), to_faq),
-					MSH(Filters.regex('^🔮 Всякое 🔮$'), to_misc),
-					MSH(Filters.regex('^📲 Свяжись с нами! 📲$'), to_contact),
-					MSH((Filters.regex('^📱📷$') | Filters.regex('^🙃📖$') | 
-							Filters.regex('^🅱️🙏$') | Filters.regex('^🕸🔗$')), to_links),
+		FAQ:	[
 					
 		],
-		MISC:	[MSH(Filters.regex('^🌈 Узнать больше о Школе 🌈$'), to_story),
-					MSH(Filters.regex('^🤷‍♂️ FAQ 🤷$'), to_faq),
-					MSH(Filters.regex('^🔮 Всякое 🔮$'), to_misc),
-					MSH(Filters.regex('^📲 Свяжись с нами! 📲$'), to_contact),
-					MSH((Filters.regex('^📱📷$') | Filters.regex('^🙃📖$') | 
-							Filters.regex('^🅱️🙏$') | Filters.regex('^🕸🔗$')), to_links),
+		MISC:	[
 					
 		],
-		CONTACT:[MSH(Filters.regex('^🌈 Узнать больше о Школе 🌈$'), to_story),
-					MSH(Filters.regex('^🤷‍♂️ FAQ 🤷$'), to_faq),
-					MSH(Filters.regex('^🔮 Всякое 🔮$'), to_misc),
-					MSH(Filters.regex('^📲 Свяжись с нами! 📲$'), to_contact),
-					MSH((Filters.regex('^📱📷$') | Filters.regex('^🙃📖$') | 
-							Filters.regex('^🅱️🙏$') | Filters.regex('^🕸🔗$')), to_links),
+		CONTACT:[
 					
 		],
 	},
