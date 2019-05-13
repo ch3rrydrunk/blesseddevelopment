@@ -134,11 +134,11 @@ bot = bot_core.dispatcher
 main_keyboard = [['🌈 Подписаться на 21_Daily_Tips 🌈'],
 				  ['🤷‍♂️ 21_FAQ 🤷', '🔮 Всякое 🔮'],
                   ['📲 Свяжись с нами! 📲'],
-				  ['^🕸🔗📱$']]
+				  ['🕸🔗📱']]
 markup = ReplyKeyboardMarkup(main_keyboard, one_time_keyboard=True)
 
 # FAQ MARKUP
-faq_keyboard = [['👈🏿, 🤙🏿'],
+faq_keyboard = [['👈🏿', ' 🤙🏿'],
 				  ['🤷‍♂️ FAQ 🤷', '🔮 Всякое 🔮'],
 				  ['🌈 Подписаться на 21_Daily_Tips 🌈']]
 faq_markup = ReplyKeyboardMarkup(faq_keyboard, one_time_keyboard=True)
@@ -150,7 +150,7 @@ MAIN, STORY, FAQ, MISC, CONTACT = range(5)
 main_states = [MSH(Filters.regex('^🌈 Подписаться на 21_Daily_Tips 🌈$'), to_story),
 					MSH(Filters.regex('^🤷‍♂️ 21_FAQ 🤷$'), to_faq),
 					MSH(Filters.regex('^🔮 Всякое 🔮$'), to_misc),
-					MSH(Filters.regex('^📲 Свяжись с нами! 📲$'), to_contact, pass_user_data=True),
+					MSH(Filters.regex('^📲 Свяжись с нами! 📲$'), inlinequery, pass_user_data=True),
 					MSH(Filters.regex('^🕸🔗📱$'), to_links)
 ]
 
