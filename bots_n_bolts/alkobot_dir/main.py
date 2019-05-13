@@ -181,11 +181,9 @@ def menu_1_1_1_message(bla):
     drink = drinks.get(bla)
     a = drink.get("name")
     b = drink.get("price")
- #   c = drink.get("link")
-    return 'Просмотр товара в категории: Jack Daniels\n\n' \
-           + a + \
-           '\n\n<b>Цена:</b> ' + b + ' руб' \
-           '<a href="https://solovino.com.ua/wp-content/uploads/2016/03/jack_daniels_0-600x800.jpg">.</a>'
+    c = drink.get("link")
+    d = drink.get("cat")
+    return 'Просмотр товара в категории: ' + d + '\n\n' + a + '\n\n<b>Цена:</b> ' + b + ' руб' + c
 
 
 def menu_2_message():
@@ -232,21 +230,24 @@ updater.dispatcher.add_error_handler(error)
 updater.start_polling()
 
 d1 = {
+  "cat": "Jack Daniels",
   "name": "<b>Виски \"Джек Дениелс\" 0,5 L</b>",
   "price": "2 290",
-  "link": "https://solovino.com.ua/wp-content/uploads/2016/03/jack_daniels_0-600x800.jpg"
+  "link": "<a href=\"https://solovino.com.ua/wp-content/uploads/2016/03/jack_daniels_0-600x800.jpg\">.</a>"
 }
 
 d2 = {
+  "cat": "Jack Daniels",
   "name": "<b>Виски \"Джек Дениелс\" 0,7 L</b>",
   "price": "2 850",
-  "link": "https://solovino.com.ua/wp-content/uploads/2016/03/jack_daniels_0-600x800.jpg"
+  "link": "<a href=\"https://solovino.com.ua/wp-content/uploads/2016/03/jack_daniels_0-600x800.jpg\">.</a>"
 }
 
 d3 = {
+  "cat": "Jack Daniels",
   "name": "<b>Виски \"Джек Дениелс Теннеси Хани\" 0,7 L</b>",
   "price": "3 050",
-  "link": "https://solovino.com.ua/wp-content/uploads/2016/03/jack_daniels_0-600x800.jpg"
+  "link": "<a href=\"https://solovino.com.ua/wp-content/uploads/2016/03/jack_daniels_0-600x800.jpg\">.</a>"
 }
 
 drinks = {
