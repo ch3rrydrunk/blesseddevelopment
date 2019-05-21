@@ -1,2 +1,2 @@
 # ConversBot
-Вопрос-ответ бот c использованием библиотеки python-telegram-bot
+Conversation telegram bot(python-telegram-bot) that records responses to the Sqlite database.
