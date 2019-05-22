@@ -1,1 +1,1 @@
-bot: python ConversBot.py
+bot: python conv_bot.py
